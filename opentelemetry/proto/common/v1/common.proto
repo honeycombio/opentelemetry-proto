@@ -66,8 +66,17 @@ message KeyValue {
   AnyValue value = 2;
 }
 
+// StringKeyValue is a pair of key/value strings. This is the simpler (and faster) version
+// of KeyValue that only supports string values.
+message StringKeyValue {
+  option deprecated = true;
+
+  string key = 1;
+  string value = 2;
+}
+
 // InstrumentationScope is a message representing the instrumentation scope information
-// such as the fully qualified name and version. 
+// such as the fully qualified name and version.
 message InstrumentationScope {
   // An empty instrumentation scope name means the name is unknown.
   string name = 1;
