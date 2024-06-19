@@ -2,6 +2,14 @@
 
 [![Build Check](https://github.com/open-telemetry/opentelemetry-proto/workflows/Build%20Check/badge.svg?branch=main)](https://github.com/open-telemetry/opentelemetry-proto/actions?query=workflow%3A%22Build+Check%22+branch%3Amain)
 
+⚠️ **NOTE** ⚠️
+
+This is a modified version of the Go OpenTelemtry protobuf files to re-add deprecated/removed Metric types (IntSum, IntGuage, IntHistogram) and label type (StringKeyValue).
+
+You should not depend on these protobuf files directly, instead use the Honeycomb fork of the [opentelemetry-proto-go](https://github.com/honeycombio/opentelemetry-proto-go) package which includes these changes.
+
+---
+
 This repository contains the [OTLP protocol specification](docs/specification.md)
 and the corresponding Language Independent Interface Types ([.proto files](opentelemetry/proto)).
 
