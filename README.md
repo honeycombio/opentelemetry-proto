@@ -6,7 +6,7 @@ This is a modified version of the Go OpenTelemtry protobuf files to re-add depre
 
 You should not depend on these protobuf files directly, instead use the Honeycomb fork of the [opentelemetry-proto-go](https://github.com/honeycombio/opentelemetry-proto-go) package which includes these changes.
 
-This repo is currently pinned to [v1.5.0](https://github.com/open-telemetry/opentelemetry-proto/releases/tag/v1.5.0) of the upstream repository.
+This repo is currently pinned to [v1.9.0](https://github.com/open-telemetry/opentelemetry-proto/releases/tag/v1.9.0) of the upstream repository.
 
 [![Build Check](https://github.com/open-telemetry/opentelemetry-proto/workflows/Build%20Check/badge.svg?branch=main)](https://github.com/open-telemetry/opentelemetry-proto/actions?query=workflow%3A%22Build+Check%22+branch%3Amain)
 
@@ -45,7 +45,7 @@ To generate the raw gRPC client libraries, use `make gen-${LANGUAGE}`. Currently
 components as indicated by the Maturity table below.
 
 | Component | Binary Protobuf Maturity | JSON Maturity |
-| --------- |--------------- | ------------- |
+| --------- | --------------- | ------------- |
 | common/* | Stable | [Stable](docs/specification.md#json-protobuf-encoding) |
 | resource/* | Stable | [Stable](docs/specification.md#json-protobuf-encoding) |
 | metrics/\*<br>collector/metrics/* | Stable | [Stable](docs/specification.md#json-protobuf-encoding) |
@@ -135,3 +135,15 @@ Experiments which succeed, require a review before the field or the message is m
 
 No guarantees are provided whatsoever about the stability of the code that
 is generated from the .proto files by any particular code generator.
+
+## Maintainers
+
+- [OpenTelemetry Technical Committee](https://github.com/open-telemetry/community/blob/main/community-members.md#technical-committee)
+
+For more information about the maintainer role, see the [community repository](https://github.com/open-telemetry/community/blob/main/guides/contributor/membership.md#maintainer).
+
+## Approvers
+
+- [OpenTelemetry Specification Sponsors](https://github.com/open-telemetry/community/blob/main/community-members.md#specifications-and-proto)
+
+For more information about the approver role, see the [community repository](https://github.com/open-telemetry/community/blob/main/guides/contributor/membership.md#approver).

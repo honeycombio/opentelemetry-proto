@@ -1,3 +1,4 @@
+<!-- markdownlint-disable-next-line first-line-heading -->
 <!--- Hugo front matter used to generate the website version of this page:
 title: OTLP Specification
 linkTitle: OTLP
@@ -224,18 +225,18 @@ retryable and not-retryable:
   and cannot be deserialized or processed by the server. The client
   SHOULD maintain a counter of such dropped data.
 
-The server MUST indicate retryable errors using code
+The server SHOULD indicate retryable errors using code
 [Unavailable](https://godoc.org/google.golang.org/grpc/codes) and MAY supply
 additional
 [details via status](https://godoc.org/google.golang.org/grpc/status#Status.WithDetails)
 using
-[RetryInfo](https://github.com/googleapis/googleapis/blob/6a8c7914d1b79bd832b5157a09a9332e8cbd16d4/google/rpc/error_details.proto#L40)
-containing 0 value of RetryDelay. Here is a sample Go code to illustrate:
+[RetryInfo](https://github.com/googleapis/googleapis/blob/6a8c7914d1b79bd832b5157a09a9332e8cbd16d4/google/rpc/error_details.proto#L40).
+Here is a sample Go code to illustrate:
 
 ```go
   // Do this on server side.
   st, err := status.New(codes.Unavailable, "Server is unavailable").
-    WithDetails(&errdetails.RetryInfo{RetryDelay: &duration.Duration{Seconds: 0}})
+    WithDetails(&errdetails.RetryInfo{RetryDelay: &duration.Duration{Seconds: 5}})
   if err != nil {
     log.Fatal(err)
   }
@@ -308,7 +309,7 @@ If the server is unable to keep up with the pace of data it receives from the
 client then it SHOULD signal that fact to the client. The client MUST then
 throttle itself to avoid overwhelming the server.
 
-To signal backpressure when using gRPC transport, the server MUST return an
+To signal backpressure when using gRPC transport, the server SHOULD return an
 error with code [Unavailable](https://godoc.org/google.golang.org/grpc/codes)
 and MAY supply additional
 [details via status](https://godoc.org/google.golang.org/grpc/status#Status.WithDetails)
@@ -559,6 +560,9 @@ below about what this field can contain in each specific failure case.
 The server SHOULD use HTTP response status codes to indicate
 retryable and not-retryable errors for a particular erroneous situation. The
 client SHOULD honour HTTP response status codes as retryable or not-retryable.
+
+##### Retryable Response Codes
+
 The requests that receive a response status code listed in following table SHOULD
 be retried.
 All other `4xx` or `5xx` response status codes MUST NOT be retried.
@@ -591,9 +595,10 @@ overloaded, the server SHOULD respond with `HTTP 429 Too Many Requests` or
 recommended time interval in seconds to wait before retrying.
 
 The client SHOULD honour the waiting interval specified in the "Retry-After"
-header if it is present. If the client receives an `HTTP 429` or an `HTTP 503`
-response and the "Retry-After" header is not present in the response, then the
-client SHOULD implement an exponential backoff strategy between retries.
+header if it is present. If the client receives a retryable error code (see
+[table above](#retryable-response-codes)) and the "Retry-After" header is
+not present in the response, then the client SHOULD implement an exponential backoff
+strategy between retries.
 
 ##### All Other Responses
 
@@ -650,6 +655,20 @@ thus minimizing the memory overhead caused by having multiple queues.
 This ensures that all destination servers receive the data regardless of their
 speed of reception (within the available limits imposed by the size of the
 client-side queue).
+
+### Empty Telemetry Envelopes
+
+Under certain circumstances, it is possible to have a telemetry envelope with
+no contents. Some examples would be a ResourceMetrics with no ScopeMetrics
+inside it, a ResourceMetrics with no Metrics inside it, or the equivalents for
+Logs or Spans. One way this might happen would be for filtering rules to remove
+all the contained data points, though there are others.
+
+In practice, such empty envelopes are often discarded by existing
+implementations. Given that, senders SHOULD NOT create empty envelopes (OTLP
+payloads that contain zero spans, zero metric points or zero log records),
+receivers MAY ignore empty envelopes, and implementations that receive and send
+(forward) OTLP payloads MAY drop empty envelopes.
 
 ## Known Limitations
 
